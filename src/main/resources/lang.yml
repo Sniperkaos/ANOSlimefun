@@ -1,0 +1,14 @@
+#This lang file depends on https://docs.advntr.dev/minimessage/format.html, instead of color codes.
+
+prefix:
+   enabled: true
+   value: "<gray>[<gradient:green:dark_green>ANO Slimefun</gradient>]:</gray> "
+en-us:
+   drugs:
+      sativa:
+         usage: "<gradient:gold:green>You spark up the sativa plant. You feel relaxed.</gradient>"
+         messages: 
+            - "<green>You feel relaxed.</green>"
+            - "<green>You feel at ease.</green>"
+         overdose:
+           message: "<gradient:red:black>You think you took too much sativa...</gradient>"

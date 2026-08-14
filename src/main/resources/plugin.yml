@@ -1,0 +1,11 @@
+name: ANOSF
+version: 0.0.1
+author: cworldstar
+description: A Slimefun addon that adds a bunch of random stuff.
+website:
+
+main: dev.cworldstar.anosf.ANOSF
+depend: [Slimefun]
+softdepend: [ProtocolLib, InfinityExpansion2, DecentHolograms]
+
+api-version: 1.21

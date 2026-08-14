@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cworldstar</groupId>
+  <artifactId>anosf</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>ANOSF</name>
+  <description>ANO Slimefun Addon</description>
+  
+   <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.release>21</maven.compiler.release>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  	<pluginRepositories>
+	    <pluginRepository>
+	        <id>bytecode.space</id>
+	        <url>https://repo.bytecode.space/repository/maven-public/</url>
+	    </pluginRepository>
+	</pluginRepositories>
+
+  <build>
+    <plugins>
+        <plugin>
+            <groupId>ca.bkaw</groupId>
+            <artifactId>paper-nms-maven-plugin</artifactId>
+            <version>1.4.10</version>
+        </plugin>
+    </plugins>
+    <finalName>${project.name}v${project.version}</finalName>
+    <defaultGoal>clean package</defaultGoal>
+    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>*</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+  
+
+  
+  <repositories>
+    <repository>
+      <id>paper-repo</id>
+      <url>https://repo.destroystokyo.com/repository/maven-public/</url>
+    </repository>
+  
+	  <repository>
+	  <id>codemc-repo</id>
+	  <url>https://repo.codemc.io/repository/maven-public/</url>
+	  <layout>default</layout>
+	</repository>
+  
+	<repository>
+		<id>jitpack.io</id>
+		<url>https://jitpack.io</url>
+    </repository>
+  </repositories>
+ 	
+  <dependencies>
+  
+        <dependency>
+            <groupId>com.github.GuizhanCraft</groupId>
+            <artifactId>InfinityExpansion2</artifactId>
+            <version>-3bfc52fbb5-1</version>
+            <scope>provided</scope>
+        </dependency>
+
+	    <dependency>
+	        <groupId>org.jetbrains.kotlin</groupId>
+	        <artifactId>kotlin-stdlib</artifactId>
+	        <version>1.9.23</version>
+	    </dependency>
+  
+	    <dependency>
+	      <groupId>io.papermc.paper</groupId>
+	      <artifactId>paper-api</artifactId>
+	      <version>1.21.8-R0.1-SNAPSHOT</version>
+	      <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>com.github.Slimefun</groupId>
+	      <artifactId>Slimefun4</artifactId>
+	      <version>experimental-SNAPSHOT</version>
+	      <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.projectlombok</groupId>
+	      <artifactId>lombok</artifactId>
+	      <version>1.18.30</version>
+	      <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>com.github.dmulloy2</groupId>
+	      <artifactId>ProtocolLib</artifactId>
+	      <version>5.3.0</version>
+	      <scope>provided</scope>
+	    </dependency>
+  </dependencies>
+  
+</project>
