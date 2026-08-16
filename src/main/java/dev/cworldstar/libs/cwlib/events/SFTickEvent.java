@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SFTickEvent extends Event {
 
-	private long currentTick = 0;
+	private final long currentTick;
 	
 	private static final HandlerList handlers = new HandlerList();
 	
@@ -21,6 +21,11 @@ public class SFTickEvent extends Event {
 	}
 	
 	public boolean subtick(int tick) {
+		if(tick < 0) {
+			throw new RuntimeException("The currentTick is negative! This should be impossible, try restarting the server.");
+		} else if(tick == 0) {
+			return false;
+		}
 		return currentTick % tick == 0;
 	}
 	

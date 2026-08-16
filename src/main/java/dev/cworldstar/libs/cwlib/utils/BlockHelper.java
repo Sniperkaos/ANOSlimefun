@@ -71,6 +71,10 @@ public class BlockHelper {
     public static Vector direction(Block origin, Block towards, double magnitude) {
     	return (towards.getLocation().clone().toVector().subtract(origin.getLocation().toVector()));
     }
+    
+    public static Vector direction(Vector origin, Vector towards, double magnitude) {
+    	return (towards.subtract(origin));
+    }
   
     
     @ParametersAreNonnullByDefault

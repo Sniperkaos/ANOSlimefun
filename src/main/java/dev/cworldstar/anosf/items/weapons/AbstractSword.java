@@ -36,15 +36,23 @@ public abstract class AbstractSword extends ANOSFItem implements PreventDisencha
 	) {
 		super(
 			ItemRegistry.getItemGroup("WEAPON_CATEGORY"), 
-				new SlimefunItemStack(id, new ItemStackBuilder(material)
-					.attribute(Attribute.ATTACK_DAMAGE, new AttributeModifier(ANOSF.key("ASWORD_DMG"), damage, Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
-					.name(displayName)
-					.lore(lore)
-					.durability(durability)
-					.glowing(glowing)
-					.enchants(enchants)
-					.build())
-			, 
+			new SlimefunItemStack(id, new ItemStackBuilder(material)
+				.attribute(
+					Attribute.ATTACK_DAMAGE, 
+					new AttributeModifier(
+						ANOSF.key("ASWORD_DMG"), 
+						damage, 
+						Operation.ADD_NUMBER, 
+						EquipmentSlotGroup.MAINHAND
+					)
+				)
+				.name(displayName)
+				.lore(lore)
+				.durability(durability)
+				.glowing(glowing)
+				.enchants(enchants)
+				.build()
+			), 
 			RecipeType.NULL, 
 			null
 		);

@@ -57,5 +57,4 @@ public class ChromeSword extends SlimefunItem {
 			}
 		});
 	}
-
 }

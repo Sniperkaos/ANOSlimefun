@@ -144,7 +144,7 @@ public class ANOSF extends AbstractSFAddon {
 	}
 
 	@Override
-	public void onStart(BootstrapContext context) {		
+	public void start(BootstrapContext context) {		
 		context.getLifecycleManager().registerEventHandler(
 			RegistryEvents.DAMAGE_TYPE.compose().newHandler(e -> {
 				ANOSFDamageType.registerAll(e.registry());

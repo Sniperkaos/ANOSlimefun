@@ -1,6 +1,11 @@
 package dev.cworldstar.libs.cwlib.reactions;
 
+import java.util.concurrent.CompletableFuture;
+
+import dev.cworldstar.libs.cwlib.impl.SlimefunLiquidStack.ReactionEnvironment;
+
 @FunctionalInterface
 public interface ReactionConsumer {
-	float run(Float moles, Float enviroTemp, SlimefunReaction reaction);
+		
+	CompletableFuture<Float> run(Float moles, ReactionEnvironment environment, SlimefunReaction reaction);
 }

@@ -35,28 +35,28 @@ public class TieredDecayGenerators {
 				continue;
 			}
 			ItemRegistry.registerItem(new DecayGenerator(
-					ItemRegistry.getItemGroup("MACHINE_CATEGORY"),
-					Material.COPPER_BLOCK,
-					tier,
-					"DECAY_GENERATOR_" + tier.toString(),
-					"Generator",
-					"<gradient:yellow:gray>Decay Generator</gradient>",
-					new String[] {
-							
-					},
-					RecipeType.NULL,
-					((tier.getTier() * 4) - 3 + (tier.getTier() * 10)),
-					new ItemStack[0],
-					25600,
-					(Location loc, Config cfg) -> {
-						return true;
-					},
-					Arrays.asList(new GeneratorRecipe[] {
-							new GeneratorRecipe("DECAY_HB_PARTICLE", ItemRegistry.getRegistryItem("HBPARTICLE").getItem(), 1080, 1080000),
-							new GeneratorRecipe("DECAY_STRANGE_SPARK", ItemRegistry.getRegistryItem("FALLEN_SPARK_PARTICLE").getItem(), 74520, 74520000),
-							new GeneratorRecipe("DECAY_WHITE_PARTICLE", ItemRegistry.getRegistryItem("WHITE_PARTICLE").getItem(), 12420, 12420000),
-							new GeneratorRecipe("DECAY_COSMIC_PARTICLE", ItemRegistry.getRegistryItem("COSMIC_PARTICLE").getItem(), 1242000, 1242000000)
-					})	
+				ItemRegistry.getItemGroup("MACHINE_CATEGORY"),
+				Material.COPPER_BLOCK,
+				tier,
+				"DECAY_GENERATOR_" + tier.toString(),
+				"Generator",
+				"<gradient:yellow:gray>Decay Generator</gradient>",
+				new String[] {
+						
+				},
+				RecipeType.NULL,
+				((tier.getTier() * 4) - 3 + (tier.getTier() * 10)),
+				new ItemStack[0],
+				25600,
+				(Location loc, Config cfg) -> {
+					return true;
+				},
+				Arrays.asList(new GeneratorRecipe[] {
+						new GeneratorRecipe("DECAY_HB_PARTICLE", ItemRegistry.getRegistryItem("HBPARTICLE").getItem(), 1080, 1080000),
+						new GeneratorRecipe("DECAY_STRANGE_SPARK", ItemRegistry.getRegistryItem("FALLEN_SPARK_PARTICLE").getItem(), 74520, 74520000),
+						new GeneratorRecipe("DECAY_WHITE_PARTICLE", ItemRegistry.getRegistryItem("WHITE_PARTICLE").getItem(), 12420, 12420000),
+						new GeneratorRecipe("DECAY_COSMIC_PARTICLE", ItemRegistry.getRegistryItem("COSMIC_PARTICLE").getItem(), 1242000, 1242000000)
+				})	
 			));
 		}
 	}

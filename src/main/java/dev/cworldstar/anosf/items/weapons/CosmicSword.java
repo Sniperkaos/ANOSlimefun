@@ -25,7 +25,6 @@ import dev.cworldstar.libs.cwlib.impl.armor.ArmorSetPiece;
 import dev.cworldstar.libs.cwlib.utils.FormatUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.papermc.paper.event.player.PlayerArmSwingEvent;
 
 public class CosmicSword extends SlimefunItem {

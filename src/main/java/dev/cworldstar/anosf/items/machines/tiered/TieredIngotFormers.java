@@ -43,10 +43,9 @@ public class TieredIngotFormers {
 		for(SlimefunItemStack dust : dusts) {
 			try {
 				if(
-						dust.getItemId().equalsIgnoreCase(SlimefunItems.COPPER_DUST.getItemId()) ||
-						dust.getItemId().equalsIgnoreCase(SlimefunItems.IRON_DUST.getItemId()) ||
-						dust.getItemId().equalsIgnoreCase(SlimefunItems.GOLD_DUST.getItemId())
-
+					dust.getItemId().equalsIgnoreCase(SlimefunItems.COPPER_DUST.getItemId()) ||
+					dust.getItemId().equalsIgnoreCase(SlimefunItems.IRON_DUST.getItemId()) ||
+					dust.getItemId().equalsIgnoreCase(SlimefunItems.GOLD_DUST.getItemId())
 				) { 
 					continue;
 				}

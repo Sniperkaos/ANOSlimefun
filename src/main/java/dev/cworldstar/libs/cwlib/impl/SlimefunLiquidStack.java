@@ -2,13 +2,20 @@ package dev.cworldstar.libs.cwlib.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import dev.cworldstar.anosf.ANOSF;
 import dev.cworldstar.anosf.items.Items;
+import dev.cworldstar.libs.cwlib.AbstractSFAddon;
 import dev.cworldstar.libs.cwlib.ItemRegistry;
 import dev.cworldstar.libs.cwlib.reactions.ReactionConsumer;
 import dev.cworldstar.libs.cwlib.reactions.SlimefunReaction;
@@ -16,6 +23,7 @@ import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
@@ -32,38 +40,98 @@ public class SlimefunLiquidStack extends SlimefunItem {
 		NEUTRAL
 	}
 	
-	@AllArgsConstructor
-	public static class ReactionResult {
-		@Getter
-		private boolean completed;
-		@Getter
-		private float startTemperature;
-		@Getter
-		private float endTemperature;
+	public static class ReactionEnvironment {
+		private float temperature;
+		private @Getter Location block;
+		
+		public ReactionEnvironment(Location block) {
+			temperature = (float) block.getBlock().getTemperature();
+			this.block = block;
+		}
+		
+		public void editEnvironmentTemperature(float newTemp) {
+			this.temperature = newTemp;
+		}
+		
+		public float getEnvironmentTemperature() {
+			return temperature;
+		}
 	}
 	
-	public ReactionResult react(float moles, SlimefunReaction reaction, float environmentTemperature) {
+	@AllArgsConstructor
+	public static class ReactionResult {
+		
+		public static enum ReactionResultType {
+			COMPLETED,
+			FAILED;
+			
+			public static ReactionResultType asReactionResult(boolean b) {
+				if(b) {
+					return COMPLETED;
+				} else {
+					return FAILED;
+				}
+			}
+		}
+		
+		@Getter
+		private ReactionResultType completed;
+		@Getter
+		private ReactionEnvironment environment;
+	}
+	
+	public CompletableFuture<ReactionResult> react(float moles, SlimefunReaction reaction, ReactionEnvironment environment) {
 		Validate.isTrue(reaction.getOrigin().equals(this), "The given reaction does not include this reagent as an origin!");
-		float endTemperature = reactionEquation.run(moles, environmentTemperature, reaction);
-		boolean failed = reaction.getFailingTemperature() > endTemperature;
-		return new ReactionResult(failed, environmentTemperature, endTemperature);
+		
+		CompletableFuture<ReactionResult> snapshot = new CompletableFuture<ReactionResult>();
+	
+		reactionEquation.run(moles, environment, reaction).whenComplete((result, error) -> {
+			boolean success = reaction.test(environment);
+			snapshot.complete(new ReactionResult(ReactionResult.ReactionResultType.asReactionResult(success), environment));
+		});
+		
+		return snapshot;
 	}
 	
 	@Setter
-	private @NonNull ReactionConsumer reactionEquation = (moles, enviroTemp, reaction) -> {
+	@Getter
+	/**
+	 *  Many of these consumers will run at the same time, we must not cache the environment temperature, don't yell at me
+	 *  for not caching the {@link ReactionEnvironment#getEnvironmentTemperature()}.
+	 *  
+	 */
+	private @NonNull ReactionConsumer reactionEquation = (moles, enviroment, reaction) -> {
+		
 		float heatDissipation = reaction.getHeatGeneration();
-		ReactionType rt = reaction.getReactionType();
-		switch(rt) {
-			case ENDOTHERMIC:
-				// lowers the temp of the environment drastically
-				return enviroTemp - (heatDissipation*(1-(enviroTemp/heatDissipation)));
-			case EXOTHERMIC:
-				// raises the temp of the environment drastically
-				return enviroTemp + (heatDissipation*(1+(enviroTemp/heatDissipation)));
-			default:
-				break;
-		}
-		return enviroTemp;
+		
+		CompletableFuture<Float> reactionResult = new CompletableFuture<Float>();
+		
+		new BukkitRunnable() {
+			private double endTick = Bukkit.getCurrentTick() + reaction.getTicks();
+			private	ReactionEnvironment reactionEnvironment = enviroment;
+			
+			@Override
+			public void run() {
+				if(endTick < Bukkit.getCurrentTick()) {
+					reactionResult.complete(reactionEnvironment.getEnvironmentTemperature());
+					cancel();
+				}
+							
+				ReactionType rt = reaction.getReactionType();
+				switch(rt) {
+					case ENDOTHERMIC:
+						// lowers the temp of the environment drastically
+						reactionEnvironment.editEnvironmentTemperature(enviroment.getEnvironmentTemperature() - (heatDissipation*(1-(enviroment.getEnvironmentTemperature()/heatDissipation))));
+					case EXOTHERMIC:
+						// raises the temp of the environment drastically
+						reactionEnvironment.editEnvironmentTemperature(enviroment.getEnvironmentTemperature() + (heatDissipation*(1+(enviroment.getEnvironmentTemperature()/heatDissipation))));
+					default:
+						
+				}
+			}
+		}.runTaskTimer(AbstractSFAddon.get(), 0, Slimefun.getTickerTask().getTickRate());
+		
+		return reactionResult;
 	};
 	
 	@Setter
@@ -98,7 +166,7 @@ public class SlimefunLiquidStack extends SlimefunItem {
 		setIngotStack(solid);
 	}
 	
-	public SlimefunLiquidStack(ItemGroup itemGroup, SlimefunItemStack item, ItemStack solid, float meltingTemperature) {
+	public SlimefunLiquidStack(ItemGroup itemGroup, SlimefunItemStack item, ItemStack solid, SlimefunGas gas, float meltingTemperature) {
 		this(itemGroup, item, solid);
 		setMeltingTemperature(meltingTemperature);
 	}

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BoundingBox;
 
@@ -16,6 +17,8 @@ import dev.cworldstar.libs.cwlib.events.SFTickEvent;
 import dev.cworldstar.libs.cwlib.impl.ExplosionManager;
 import dev.cworldstar.libs.cwlib.impl.RadiationExtender;
 import dev.cworldstar.libs.cwlib.impl.RadiationZone;
+import dev.cworldstar.libs.cwlib.impl.breathing.Breathing;
+import dev.cworldstar.libs.cwlib.impl.hazards.Hazards;
 import dev.cworldstar.libs.cwlib.listeners.AbstractListener;
 import dev.cworldstar.libs.cwlib.listeners.AutoDisenchantListener;
 import dev.cworldstar.libs.cwlib.listeners.DurabilityDamageListener;
@@ -77,7 +80,16 @@ public abstract class AbstractSFAddon extends JavaPlugin implements SlimefunAddo
 		}
 	}
 	
-	public void onStart(BootstrapContext context) {
+	private void onStart(BootstrapContext context) {
+		try {
+			Hazards.registerDamageTypes(context);
+			start(context);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void start(BootstrapContext context) {
 		
 	}
 	
@@ -187,5 +199,9 @@ public abstract class AbstractSFAddon extends JavaPlugin implements SlimefunAddo
 	public static ScheduledTask async(Consumer<ScheduledTask> r) {
 		ScheduledTask task = Bukkit.getServer().getAsyncScheduler().runNow(addon, r);
 		return task;
+	}
+
+	public static <T extends Listener> void registerListener(T listener) {
+		Bukkit.getPluginManager().registerEvents(listener, addon);
 	}
 }
